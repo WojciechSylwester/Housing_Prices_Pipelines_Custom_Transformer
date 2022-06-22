@@ -12,3 +12,7 @@ The purpose of this project is to predict the Sale Price. Firstly, I perform exp
 * SciPy
 * category_encoders
 * xgboost
+
+## Project Description
+
+## EDA
