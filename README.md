@@ -59,24 +59,91 @@ All functions I created can be input in steps of pipeline.
 * AddAttributes
 * DropCorrFeatures
 * SkewedFeatures
+```python
+class CustomImputer(BaseEstimator, TransformerMixin):
 
-![image](https://user-images.githubusercontent.com/61654792/175185213-4c52f000-4542-4771-a871-4a71d3ac375a.png)
+    def __init__(self, imputer, strategy, fill_value=0):
+        
+        self.imputer = imputer
+        self.strategy = strategy
+        self.fill_value = fill_value
 
-![image](https://user-images.githubusercontent.com/61654792/175185315-a8cb1cb9-c60d-4a00-8362-fdda9368f2bf.png)
+    def fit(self, X, y=None):
+        
+        self.imputer = self.imputer(strategy=self.strategy, fill_value = self.fill_value)
+        self.imputer.fit(X, y)
+        return self
+
+    def transform(self, X):
+        
+        X_imp_tran = self.imputer.transform(X)
+        X_imputer = pd.DataFrame(X_imp_tran, index=X.index, columns=X.columns)
+        return X_imputer
+```
+
+```python
+class SkewedFeatures(BaseEstimator, TransformerMixin):
+    def __init__(self, skew_threshold=0.8):
+        
+        self.skew_threshold = skew_threshold
+    
+    def fit(self, X, y=None):
+
+        skew_features = X.select_dtypes(exclude='object').apply(lambda x: skew(x))
+        self.skew_features_high = skew_features[abs(skew_features) > self.skew_threshold].index
+        return self
+    
+    def transform(self, X):
+        
+        X[self.skew_features_high] = np.log1p(X[self.skew_features_high])
+        return X
+````
 
 
 #### Categorical Columns
 * CustomImputer
 * OrdinalEncoder
 
-![image](https://user-images.githubusercontent.com/61654792/175185411-c9f11d37-5bb8-41f7-941b-7bf0e1c5e338.png)
-![image](https://user-images.githubusercontent.com/61654792/175185419-61fbc4c2-2846-44f7-a49c-ce8a0a763d9a.png)
+```python
+CentralAir_map = {'Y': 1, 'N': 0}
+Street_map = {'Pave': 1, 'Grvl': 0}
+
+binary_mapping = [{'col': col, 'mapping': globals()[col + '_map']}
+                     for col in cat_bin]
+```
 
 ## Pipelines
 The most important and satisfying section. Pipelines with which we can combine all data preprocessing!
 
-![image](https://user-images.githubusercontent.com/61654792/175185528-466ea001-6c54-47ed-8bb7-18176811c7af.png)
-![image](https://user-images.githubusercontent.com/61654792/175185547-c54b6284-e954-40bc-99ae-90f3d3fb041a.png)
+```python
+# Preprocessing for numerical data
+num_transformer = Pipeline(steps=[
+    ('num_imputer', CustomImputer(SimpleImputer, strategy='median')),
+    ('adder', AddAttributes()),
+    ('drop_corr', DropCorrFeatures()),
+    ('skew_func', SkewedFeatures()),
+    ('std_scaler', StandardScaler())
+])
+
+# Preprocessing for categorial data
+cat_transformer_ordinal = Pipeline(steps=[
+    ('cat_ordinal_imputer', CustomImputer(SimpleImputer, strategy='constant', fill_value='NA')),
+    ('ordinal_encoder', ce.OrdinalEncoder(mapping = ordinal_mapping))
+])
+
+```
+
+```python
+# Bundle preprocessing for numerical and categorical data
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', num_transformer, num_col_transform),
+        ('cat_ordinal', cat_transformer_ordinal, cat_ordinal),
+        ('cat_ordinal_num', cat_transformer_ordinal_num, cat_ordinal_num),
+        ('cat_bin', cat_transformer_bin, cat_bin),
+        ('cat_nominal', cat_transformer_nominal, cat_nominal)
+    ], remainder='passthrough')
+```
 
 ## Modeling
 I use XGBRegressor and hyperparameter tuning to evaluate score.
