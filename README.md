@@ -81,5 +81,4 @@ The most important and satisfying section. Pipelines with which we can combine a
 ## Modeling
 I use XGBRegressor and hyperparameter tuning to evaluate score.
 
-MAE: 14522.152
-
+There is a field to improve the score by adjusting more hyperparameters.
