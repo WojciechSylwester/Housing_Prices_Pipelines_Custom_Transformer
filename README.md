@@ -16,7 +16,7 @@ The purpose of this project is to predict the Sale Price. Firstly, I perform exp
 * xgboost
 
 ## Get Data
-Dataset is from Kaggle competition about housing prices in Ames.
+Dataset derives from Kaggle competition about housing prices in Ames.
 
 https://www.kaggle.com/competitions/home-data-for-ml-course/data
 
