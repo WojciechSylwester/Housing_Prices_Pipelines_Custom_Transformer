@@ -1,5 +1,8 @@
 ## 🏠 Housing Price: Pipelines with Custom Transformer
 ### Summary
+
+![Housing_Custom_Pipeline](https://user-images.githubusercontent.com/61654792/217819437-ee6cb555-e4f9-4709-b2c6-5e343778757f.png)
+
 The purpose of this project is to predict the Sale Price. Firstly, I perform exploratory data analysis which indicate me how to prepare the data. To have more automation, I decided to make pipelines with custom transformers. After bundled all the pipelines, I use hyperparameter tuning and finally compute the score.
 ## Project Description
 
