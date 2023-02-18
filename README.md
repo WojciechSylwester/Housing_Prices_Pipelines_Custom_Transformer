@@ -1,4 +1,5 @@
 ## 🏠 Housing Price: Pipelines with Custom Transformer
+Kaggle Notebook 🡪 https://www.kaggle.com/code/wojteksy/santander-hybrid-recommendation-system
 ### Summary
 
 ![Housing_Custom_Pipeline](https://user-images.githubusercontent.com/61654792/217819437-ee6cb555-e4f9-4709-b2c6-5e343778757f.png)
@@ -12,13 +13,13 @@ The purpose of this project is to predict the Sale Price. Firstly, I perform exp
 * Pandas
 * Seaborn
 * Matplotlib
-* Numpy
-* Jupyter
+* NumPy
 * SciPy
 * category_encoders
 * xgboost
+* Jupyter Notebook
 
-## Get Data
+## Data Source
 Dataset derives from Kaggle competition about housing prices in Ames.
 
 https://www.kaggle.com/competitions/home-data-for-ml-course/data
